@@ -13,8 +13,15 @@ from sqlalchemy import func
 
 @jwt_required()
 def get_games():
+    current_user = get_jwt_identity()  # Identitas pengguna yang sedang login
+
+    # Ambil semua game dari database
     games = Game.query.order_by(Game.name.asc()).all()
-    return jsonify({"data": {"games": [game.to_dict() for game in games]}})
+    game_list = []
+    for game in games:
+        game_list.append(game.to_dict())  # Asumsikan game.to_dict() mengembalikan representasi yang diinginkan
+
+    return jsonify({'status': 'success', 'data': {'games': game_list}}), 200
 
 @jwt_required()
 def get_game(game_id):
